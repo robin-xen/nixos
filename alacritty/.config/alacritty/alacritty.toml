@@ -33,3 +33,8 @@ magenta = "#FF55FF"
 cyan = "#55FFFF"
 white = "#FFFFFF"
 
+[terminal.shell]
+program = "/usr/bin/fish"
+
+[window]
+opacity = 0.80
