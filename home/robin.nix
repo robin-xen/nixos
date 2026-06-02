@@ -10,7 +10,7 @@ home.homeDirectory = "/home/robin";
   #cursor-thing-dont-forget
   home.pointerCursor = {
     name = "Adwaita";
-    size = 27;
+    size = 24;
     package = pkgs.adwaita-icon-theme;
     gtk.enable = true;
   };

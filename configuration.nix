@@ -10,6 +10,12 @@
     ./hardware-configuration.nix
     ];
 
+hardware.firmware = [
+  (pkgs.runCommand "custom-edid" {} ''
+    mkdir -p $out/lib/firmware/edid
+    cp ${./edid.bin} $out/lib/firmware/edid/edid.bin
+  '')
+];
 
   security.sudo = { 
     enable = true;
@@ -48,7 +54,7 @@
     environment.sessionVariables = {
       GTK_THEME = "Adwaita:dark";
       XCURSOR_THEME = "Adwaita";
-      XCURSOR_SIZE = "27";
+      XCURSOR_SIZE = "24";
     };
 
 # Set dark theme via dconf (this is what was missing)
@@ -71,12 +77,13 @@
     efiSysMountPoint = "/boot/efi";
   };
 
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    device = "nodev";
-    useOSProber = true;
-  };
+boot.loader.grub = {
+  enable = true;
+  efiSupport = true;
+  device = "nodev";
+  useOSProber = true;
+};
+
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs;
@@ -115,11 +122,10 @@ programs.fish.enable = true;
   };
 
 
-#hyprland block 
-programs.hyprland = { 
+
+  programs.niri = { 
   enable = true;
-  xwayland.enable = true;
-};
+  };
 
 
 #dbus-thing-block
@@ -295,3 +301,4 @@ programs.hyprland = {
   system.stateVersion = "25.11";
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
 }
+
