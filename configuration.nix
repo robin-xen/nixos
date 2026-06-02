@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, zen-browser, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports =
@@ -10,14 +10,7 @@
     ./hardware-configuration.nix
     ];
 
-#virtualization
-  virtualisation.libvirtd.enable = true;
-  networking.nftables.enable = true;
-  virtualisation.spiceUSBRedirection.enable = true;
-  programs.virt-manager.enable = true;
-  zramSwap.enable = true;
 
-#showing password feedback 
   security.sudo = { 
     enable = true;
     extraConfig = ''
@@ -25,27 +18,29 @@
       '';
   };
 
-#tailscale ssh thing 
-  services.tailscale.enable = true; 
-  networking.firewall.checkReversePath = "loose";
-#allow libvirt networking 
-  networking.firewall = { 
-    enable = true; 
-    trustedInterfaces = [ "virbr0" ];
-  };
-
-  networking.nat = { 
+  # Enforce Firefox Enterprise Policies across all managed machines
+  programs.firefox = {
     enable = true;
-    internalInterfaces = [ "virbr0" ];
-  };
-#specialzations for my nixos 
-  specialisation.lqx.configuration = {
-    system.nixos.tags = [ "lqx" ];
+    policies = {
+      DisablePocket = true;
+      DisableTelemetry = true;
+      FirefoxHome = {
+        Pocket = false;
+        Snippets = false;
+        TopSites = false;
+        Highlights = false;
+      };
+      
+      # Strict DNS over HTTPS Lockdown
+      DNSOverHTTPS = {
+        Enabled = false;
+        Locked = true; # Prevents users from turning it back on in settings
+      };
 
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_lqx;
+      # Optional: Prevent users from bypassing extensions/settings if needed
+      BlockAboutConfig = false; # Set to true if you want to completely lock advanced settings
+    };
   };
-
-#darkmode
 # Add this block to your configuration.nix
   programs.dconf.enable = true;  # You already have this
 
@@ -127,14 +122,6 @@ programs.hyprland = {
 };
 
 
-#virtualization podman 
-  virtualisation.podman = { 
-    enable = true; 
-    dockerCompat = true;   #creates docker alias for podman 
-      defaultNetwork.settings.dns_enabled = true;
-  };
-
-
 #dbus-thing-block
   services.dbus.enable = true;
 
@@ -163,21 +150,7 @@ programs.hyprland = {
     ];
   };
 
-  services.openssh = {
-    enable = true;
 
-    settings = {
-# Core security
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      ChallengeResponseAuthentication = false;
-    };
-
-# Optional but recommended
-  };
-
-  services.fail2ban.enable = true;
 
   boot.kernelParams = [
     "console=tty50"
@@ -216,23 +189,12 @@ programs.hyprland = {
     LC_TIME = "en_IN";
   };
 
-# Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  hardware.intel-gpu-tools.enable = true;
-
-#flatpak-apps
-  services.flatpak.enable = true;
-
 
 # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.robin = {
     isNormalUser = true;
     description = "robin";
-    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "kvm" ];
+    extraGroups = [ "networkmanager" "wheel"  ];
     packages = with pkgs; [];
   };
 
@@ -243,32 +205,20 @@ programs.hyprland = {
 # $ nix search wget
   environment.systemPackages = with pkgs; [
 
-    git
-      steam-run
-      distrobox
+      git
       ffmpegthumbnailer
       lm_sensors
       libnotify
-      zen-browser.packages.${pkgs.system}.default
       bc
       cliphist
       glib
       gsettings-desktop-schemas
       neovim
       gcc 
-      clang
-      clang-tools
-      gnumake
-      cmake
-      gdb
-      vim
       curl 
       wget 
       unzip 
-      curl
       adwaita-icon-theme
-      docker
-      tmux
       wl-clipboard
       brightnessctl
       networkmanagerapplet
@@ -316,36 +266,6 @@ programs.hyprland = {
       };
     };
   };
-
-
-#bluetooth-block
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true; 
-
-  systemd.user.services.blueman-applet = { 
-    enable = false; 
-  };
-
-
-#docker-block
-  virtualisation.docker.rootless = {
-    enable = true;
-    setSocketVariable = true;
-  };
-
-
-
-
-#audio-stack(don't forget)
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
-  security.rtkit.enable = true;
 
 #allow ports for different stuff 
 

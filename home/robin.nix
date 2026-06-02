@@ -51,16 +51,6 @@ home.file.".config/rofi" = {
     recursive = true;
   };
 
-home.file.".local/bin/brave-scaled" = {
-  text = ''
-    #!/usr/bin/env bash
-    exec brave \
-      --enable-features=UseOzonePlatform \
-      --ozone-platform=wayland \
-      --force-device-scale-factor=1.25 "$@"
-  '';
-  executable = true;
-};
 
 
   #git settings 
@@ -86,14 +76,6 @@ programs.git = {
     };
   };
     
-  #direnv settings 
-  programs.direnv = { 
-    enable = true; 
-    enableZshIntegration = true; 
-    enableBashIntegration = true;
-    nix-direnv.enable = true; 
-  }; 
-
 
 #fish block 
 programs.fish = { 
@@ -108,11 +90,9 @@ programs.fish = {
 
   shellAliases = { 
     aria = "aria2c -x16 -s16";
-    vid = "yt-dlp --cookies-from-browser chrome";
     nrs = "sudo nixos-rebuild switch --flake /home/robin/nix#transcendent";
     hrs = "home-manager switch --flake /home/robin/nix#robin";
     hconf = "nvim /home/robin/nix/home/robin.nix";
-    ins = "yt -dlp --cookies /home/robin/.cookies/instagram.txt";
     nconf = "nvim /home/robin/nix/configuration.nix";
     nfk = "nvim /home/robin/nix/flake.nix";
 };
@@ -196,17 +176,7 @@ programs.tmux = {
 };
 
 home.packages = with pkgs; [
-  fastfetch 
-  direnv 
-  nix-direnv
-  yt-dlp
-  obs-studio 
   rofi
-  obs-studio-plugins.wlrobs
-  obs-studio-plugins.obs-pipewire-audio-capture
-  obs-studio-plugins.obs-vkcapture
-  blender
-  brave
   zip
   file
   tree
@@ -220,32 +190,19 @@ home.packages = with pkgs; [
   nerd-fonts.jetbrains-mono
   nerd-fonts.fira-code
   htop
-  ncdu
   lsof
-  strace
-  yazi
-  p7zip
   rar
-  nmap
-  netcat
   rsync
   jq
-  openssh
   yq
   s-tui
-  man-pages
-  man-pages-posix
   fzf
   zoxide
   tldr
-  google-chrome
   pkgs.thunar 
-  protonvpn-gui
   pkgs.tumbler 
   evince 
   ps_mem
-  vscode 
-  mpv
   alacritty 
   grim 
   slurp 
@@ -254,7 +211,5 @@ home.packages = with pkgs; [
   ffmpegthumbnailer
   hyprpaper
   waybar
-  openssl
-  cloud-utils
   ];
 }
