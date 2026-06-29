@@ -6,13 +6,12 @@ bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 size = 14.0
 
 [colors.primary]
-background = "#000000"  # black background
-foreground = "#FFFFFF"  # white text
+background = "#1e1e2e" # Rich dark charcoal grey
+foreground = "#cdd6f4" # Crisp, readable light text
 
 [colors.cursor]
-text = "#000000"
-cursor = "#FFFFFF"
-
+text = "#1e1e2e"
+cursor = "#f5e0dc"
 [colors.normal]
 black = "#000000"
 red = "#AA0000"
@@ -34,7 +33,8 @@ cyan = "#55FFFF"
 white = "#FFFFFF"
 
 [terminal.shell]
-program = "/usr/bin/fish"
+program = "/usr/bin/tmux"
+args = ["new-session", "-A", "-s", "main"]
 
 [window]
-opacity = 0.80
+opacity = 1

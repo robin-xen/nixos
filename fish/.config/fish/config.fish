@@ -25,3 +25,4 @@ end
 
 # opencode
 fish_add_path /home/robin/.opencode/bin
+string match -q '*nix*' $PATH; or source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
