@@ -1,0 +1,16 @@
+# Nix build results
+result
+result-*
+
+# Editor junk
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Secrets (if you add them later)
+secrets/
+*.age
+.env
+
